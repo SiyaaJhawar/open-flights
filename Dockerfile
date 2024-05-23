@@ -1,6 +1,14 @@
 
-# Use the official Ruby image
-FROM ruby:3.0.0
+# Use a compatible base image
+FROM ruby:2.7.8
+
+# Update glibc to the required version
+RUN apt-get update -qq && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:ubuntu-toolchain-r/test && \
+    apt-get update -qq && \
+    apt-get install -y gcc-9 && \
+    apt-get install -y libc6
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev curl
@@ -37,3 +45,4 @@ EXPOSE 3000
 
 # The command to run the app
 CMD ["rails", "server", "-b", "0.0.0.0"]
+
