@@ -18,9 +18,6 @@ WORKDIR /myapp
 # Copy the Gemfile and Gemfile.lock into the container
 COPY Gemfile Gemfile.lock ./
 
-# Force Nokogiri to use the Ruby platform
-ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-
 # Install the Ruby dependencies
 RUN bundle install
 
@@ -41,7 +38,3 @@ EXPOSE 3000
 
 # The command to run the app
 CMD ["rails", "server", "-b", "0.0.0.0"]
-
-
-
-
