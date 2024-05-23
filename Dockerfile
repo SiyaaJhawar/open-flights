@@ -1,5 +1,5 @@
 # Use the official Ruby image as a parent image
-FROM ruby:2.7
+FROM ruby:3.0
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y nodejs npm
