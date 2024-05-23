@@ -1,27 +1,30 @@
-# Use the official Ruby image as a base image
-FROM ruby:3.1.1
+# Use the official Ruby image as a parent image
+FROM ruby:2.7
 
 # Install dependencies
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN apt-get update -qq && apt-get install -y nodejs npm
+
+# Install Yarn
+RUN npm install -g yarn
 
 # Set the working directory
 WORKDIR /myapp
 
-# Copy the Gemfile and Gemfile.lock into the working directory
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
+# Copy the Gemfile and Gemfile.lock into the container
+COPY Gemfile Gemfile.lock ./
 
 # Install the Ruby dependencies
 RUN bundle install
 
-# Copy the entire Rails application to the working directory
-COPY . /myapp
+# Copy the rest of the application code
+COPY . ./
 
-# Precompile assets for production
+# Precompile assets
 RUN bundle exec rake assets:precompile
 
-# Expose port 3000 to the Docker host
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Start the Rails server
+# The command to run the app
 CMD ["rails", "server", "-b", "0.0.0.0"]
+
