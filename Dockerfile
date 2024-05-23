@@ -1,17 +1,10 @@
-
-# Use a compatible base image
+# Use the official Ruby image
 FROM ruby:2.7.8
 
-# Update glibc to the required version
-RUN apt-get update -qq && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:ubuntu-toolchain-r/test && \
-    apt-get update -qq && \
-    apt-get install -y gcc-9 && \
-    apt-get install -y libc6
-
 # Install dependencies
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev curl
+RUN apt-get update -qq && \
+    apt-get install -y build-essential libpq-dev curl && \
+    apt-get install -y libc6
 
 # Install Node.js (version 14.x)
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -y nodejs
@@ -24,6 +17,9 @@ WORKDIR /myapp
 
 # Copy the Gemfile and Gemfile.lock into the container
 COPY Gemfile Gemfile.lock ./
+
+# Force Nokogiri to use the Ruby platform
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 
 # Install the Ruby dependencies
 RUN bundle install
@@ -45,4 +41,7 @@ EXPOSE 3000
 
 # The command to run the app
 CMD ["rails", "server", "-b", "0.0.0.0"]
+
+
+
 
